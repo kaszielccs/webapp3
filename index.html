@@ -15,83 +15,139 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#platform-section">Seleccionar Plataforma</a>
+                        <a class="nav-link active" aria-current="page" href="#platform-section">Seleccionar Plataforma</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link hidden" id="form-link" href="#form-section">Configuración del Servidor</a>
+                        <a class="nav-link hidden" href="#form-section" id="form-link">Configuración del Servidor</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link hidden" id="output-link" href="#output-section">Script Generado</a>
+                        <a class="nav-link hidden" href="#output-section" id="output-link">Script Generado</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link hidden" id="instructions-link" href="#instructions-section">Instrucciones</a>
+                        <a class="nav-link hidden" href="#instructions-section" id="instructions-link">Instrucciones</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container my-5">
-        <section id="platform-section" class="mb-5">
-            <h2>Selecciona la Plataforma</h2>
-            <div class="mb-3">
-                <select class="form-select" id="platform" onchange="displayForm()">
-                    <option value="" disabled selected>Seleccione...</option>
-                    <option value="avs">Azure VMware Solution (AVS)</option>
-                    <option value="iaas">Azure IaaS</option>
-                </select>
-            </div>
-        </section>
+    <section id="platform-section" class="section container mt-4">
+        <h2>Selecciona la Plataforma</h2>
+        <div class="mb-3">
+            <select id="platform" class="form-select" onchange="displayForm()">
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="avs">Azure VMware Solution (AVS)</option>
+                <option value="iaas">Azure IaaS</option>
+            </select>
+        </div>
+    </section>
 
-        <section id="form-section" class="mb-5 hidden">
-            <h2>Configuración del Servidor</h2>
-            <div class="table-responsive mb-3">
-                <table class="table table-bordered" id="server-form">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Nombre Servidor</th>
-                            <th>Sistema Operativo</th>
-                            <th>Capacidad de Disco (GB)</th>
-                            <th>Memoria (GB)</th>
-                            <th>Número de Cores</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be added dynamically -->
-                    </tbody>
-                </table>
-            </div>
-            <button class="btn btn-primary mb-3" onclick="addRow()">Agregar Servidor</button>
-            
-            <div class="mb-3">
-                <label for="script-type" class="form-label">Tipo de Script:</label>
-                <select class="form-select" id="script-type">
-                    <option value="" disabled selected>Seleccione...</option>
-                    <option value="powercli">PowerCLI (AVS)</option>
-                    <option value="terraform">Terraform (IaaS)</option>
-                    <option value="arm">ARM (IaaS)</option>
-                </select>
-            </div>
-            <button class="btn btn-success" onclick="generateScript()">Generar Script</button>
-        </section>
+    <section id="form-section" class="section container mt-4 hidden">
+        <h2>Configuración del Servidor</h2>
+        <div class="table-responsive">
+            <table id="server-form" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre Servidor</th>
+                        <th>Sistema Operativo</th>
+                        <th>Capacidad de Disco (GB)</th>
+                        <th>Memoria (GB)</th>
+                        <th>Número de Cores</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas dinámicas -->
+                </tbody>
+            </table>
+        </div>
+        <button class="btn btn-primary mb-3" onclick="addRow()">Agregar Servidor</button>
+        
+        <div class="mb-3">
+            <label for="script-type" class="form-label">Tipo de Script:</label>
+            <select id="script-type" class="form-select">
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="powercli">PowerCLI (AVS)</option>
+                <option value="terraform">Terraform (IaaS)</option>
+                <option value="arm">ARM (IaaS)</option>
+            </select>
+        </div>
+        <button class="btn btn-success generate-btn" onclick="generateScript()">Generar Script</button>
+    </section>
 
-        <section id="output-section" class="mb-5 hidden">
-            <h2>Script Generado</h2>
-            <pre id="script-output" class="p-3 bg-light"></pre>
-            <button class="btn btn-secondary" onclick="downloadScript()">Descargar Script</button>
-        </section>
+    <section id="output-section" class="section container mt-4 hidden">
+        <h2>Script Generado</h2>
+        <pre id="script-output" class="bg-light p-3"></pre>
+        <button class="btn btn-secondary" onclick="downloadScript()">Descargar Script</button>
+    </section>
 
-        <section id="instructions-section" class="mb-5 hidden">
-            <h2>Instrucciones de Despliegue</h2>
-            <div id="instructions" class="p-3 bg-light"></div>
-        </section>
-    </div>
+    <section id="instructions-section" class="section container mt-4 hidden">
+        <h2>Instrucciones de Despliegue</h2>
+        <div id="instructions"></div>
+    </section>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="scripts.js"></script>
+    <script>
+        function displayForm() {
+            const platform = document.getElementById('platform').value;
+            if (platform) {
+                $('#form-section').removeClass('hidden');
+                $('#form-link').removeClass('hidden');
+            }
+        }
+
+        function addRow() {
+            $('#server-form tbody').append(`
+                <tr>
+                    <td><input type="text" class="form-control" required></td>
+                    <td><input type="text" class="form-control os-field" required></td>
+                    <td><input type="number" class="form-control capacity-field" min="1" required></td>
+                    <td><input type="number" class="form-control memory-field" min="1" required></td>
+                    <td><input type="number" class="form-control cores-field" min="1"></td>
+                    <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Eliminar</button></td>
+                </tr>
+            `);
+        }
+
+        function removeRow(button) {
+            $(button).closest('tr').remove();
+        }
+
+        function generateScript() {
+            // Validación de campos obligatorios
+            let valid = true;
+            $('.os-field, .capacity-field, .memory-field').each(function() {
+                if (!$(this).val()) {
+                    $(this).addClass('is-invalid');
+                    valid = false;
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            if (!valid) {
+                alert('Por favor, complete todos los campos obligatorios.');
+                return;
+            }
+
+            // Si pasa la validación, generar el script
+            $('#output-section').removeClass('hidden');
+            $('#output-link').removeClass('hidden');
+            $('#instructions-section').removeClass('hidden');
+            $('#instructions-link').removeClass('hidden');
+
+            // Aquí se generaría el script basado en la selección y datos del formulario
+            $('#script-output').text('Aquí se mostrará el script generado...');
+        }
+
+        function downloadScript() {
+            // Implementar la lógica de descarga del script generado
+            alert('Descargando script...');
+        }
+    </script>
 </body>
 </html>

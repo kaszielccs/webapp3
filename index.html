@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Plantillas de Servidores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#platform-section">Seleccionar Plataforma</a>
+        <a href="#form-section" id="form-link" class="hidden">Configuración del Servidor</a>
+        <a href="#output-section" id="output-link" class="hidden">Script Generado</a>
+        <a href="#instructions-section" id="instructions-link" class="hidden">Instrucciones</a>
+    </nav>
+
+    <section id="platform-section" class="section">
+        <h2>Selecciona la Plataforma</h2>
+        <select id="platform" onchange="displayForm()">
+            <option value="" disabled selected>Seleccione...</option>
+            <option value="avs">Azure VMware Solution (AVS)</option>
+            <option value="iaas">Azure IaaS</option>
+        </select>
+    </section>
+
+    <section id="form-section" class="section hidden">
+        <h2>Configuración del Servidor</h2>
+        <div class="table-container">
+            <table id="server-form">
+                <thead>
+                    <tr>
+                        <th>Nombre Servidor</th>
+                        <th>Sistema Operativo</th>
+                        <th>Capacidad de Disco (GB)</th>
+                        <th>Memoria (GB)</th>
+                        <th>Número de Cores</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be added dynamically -->
+                </tbody>
+            </table>
+        </div>
+        <button class="btn" onclick="addRow()">Agregar Servidor</button>
+        
+        <div class="script-selection">
+            <label for="script-type">Tipo de Script:</label>
+            <select id="script-type">
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="powercli">PowerCLI (AVS)</option>
+                <option value="terraform">Terraform (IaaS)</option>
+                <option value="arm">ARM (IaaS)</option>
+            </select>
+        </div>
+        <button class="btn generate-btn" onclick="generateScript()">Generar Script</button>
+    </section>
+
+    <section id="output-section" class="section hidden">
+        <h2>Script Generado</h2>
+        <pre id="script-output"></pre>
+        <button class="btn" onclick="downloadScript()">Descargar Script</button>
+    </section>
+
+    <section id="instructions-section" class="section hidden">
+        <h2>Instrucciones de Despliegue</h2>
+        <div id="instructions"></div>
+    </section>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

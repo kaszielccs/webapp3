@@ -4,69 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Plantillas de Servidores</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="navbar">
-        <a href="#platform-section">Seleccionar Plataforma</a>
-        <a href="#form-section" id="form-link" class="hidden">Configuración del Servidor</a>
-        <a href="#output-section" id="output-link" class="hidden">Script Generado</a>
-        <a href="#instructions-section" id="instructions-link" class="hidden">Instrucciones</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Generador de Plantillas</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#platform-section">Seleccionar Plataforma</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hidden" id="form-link" href="#form-section">Configuración del Servidor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hidden" id="output-link" href="#output-section">Script Generado</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hidden" id="instructions-link" href="#instructions-section">Instrucciones</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <section id="platform-section" class="section">
-        <h2>Selecciona la Plataforma</h2>
-        <select id="platform" onchange="displayForm()">
-            <option value="" disabled selected>Seleccione...</option>
-            <option value="avs">Azure VMware Solution (AVS)</option>
-            <option value="iaas">Azure IaaS</option>
-        </select>
-    </section>
+    <div class="container my-5">
+        <section id="platform-section" class="mb-5">
+            <h2>Selecciona la Plataforma</h2>
+            <div class="mb-3">
+                <select class="form-select" id="platform" onchange="displayForm()">
+                    <option value="" disabled selected>Seleccione...</option>
+                    <option value="avs">Azure VMware Solution (AVS)</option>
+                    <option value="iaas">Azure IaaS</option>
+                </select>
+            </div>
+        </section>
 
-    <section id="form-section" class="section hidden">
-        <h2>Configuración del Servidor</h2>
-        <div class="table-container">
-            <table id="server-form">
-                <thead>
-                    <tr>
-                        <th>Nombre Servidor</th>
-                        <th>Sistema Operativo</th>
-                        <th>Capacidad de Disco (GB)</th>
-                        <th>Memoria (GB)</th>
-                        <th>Número de Cores</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Rows will be added dynamically -->
-                </tbody>
-            </table>
-        </div>
-        <button class="btn" onclick="addRow()">Agregar Servidor</button>
-        
-        <div class="script-selection">
-            <label for="script-type">Tipo de Script:</label>
-            <select id="script-type">
-                <option value="" disabled selected>Seleccione...</option>
-                <option value="powercli">PowerCLI (AVS)</option>
-                <option value="terraform">Terraform (IaaS)</option>
-                <option value="arm">ARM (IaaS)</option>
-            </select>
-        </div>
-        <button class="btn generate-btn" onclick="generateScript()">Generar Script</button>
-    </section>
+        <section id="form-section" class="mb-5 hidden">
+            <h2>Configuración del Servidor</h2>
+            <div class="table-responsive mb-3">
+                <table class="table table-bordered" id="server-form">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombre Servidor</th>
+                            <th>Sistema Operativo</th>
+                            <th>Capacidad de Disco (GB)</th>
+                            <th>Memoria (GB)</th>
+                            <th>Número de Cores</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-primary mb-3" onclick="addRow()">Agregar Servidor</button>
+            
+            <div class="mb-3">
+                <label for="script-type" class="form-label">Tipo de Script:</label>
+                <select class="form-select" id="script-type">
+                    <option value="" disabled selected>Seleccione...</option>
+                    <option value="powercli">PowerCLI (AVS)</option>
+                    <option value="terraform">Terraform (IaaS)</option>
+                    <option value="arm">ARM (IaaS)</option>
+                </select>
+            </div>
+            <button class="btn btn-success" onclick="generateScript()">Generar Script</button>
+        </section>
 
-    <section id="output-section" class="section hidden">
-        <h2>Script Generado</h2>
-        <pre id="script-output"></pre>
-        <button class="btn" onclick="downloadScript()">Descargar Script</button>
-    </section>
+        <section id="output-section" class="mb-5 hidden">
+            <h2>Script Generado</h2>
+            <pre id="script-output" class="p-3 bg-light"></pre>
+            <button class="btn btn-secondary" onclick="downloadScript()">Descargar Script</button>
+        </section>
 
-    <section id="instructions-section" class="section hidden">
-        <h2>Instrucciones de Despliegue</h2>
-        <div id="instructions"></div>
-    </section>
+        <section id="instructions-section" class="mb-5 hidden">
+            <h2>Instrucciones de Despliegue</h2>
+            <div id="instructions" class="p-3 bg-light"></div>
+        </section>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>

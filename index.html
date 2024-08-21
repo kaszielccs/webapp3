@@ -8,31 +8,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Generador de Plantillas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#platform-section">Seleccionar Plataforma</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link hidden" href="#form-section" id="form-link">Configuración del Servidor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link hidden" href="#output-section" id="output-link">Script Generado</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link hidden" href="#instructions-section" id="instructions-link">Instrucciones</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
     <section id="platform-section" class="section container mt-4">
         <h2>Selecciona la Plataforma</h2>
         <div class="mb-3">
@@ -80,7 +55,7 @@
     <section id="output-section" class="section container mt-4 hidden">
         <h2>Script Generado</h2>
         <pre id="script-output" class="bg-light p-3"></pre>
-        <button class="btn btn-secondary" onclick="downloadScript()">Descargar Script</button>
+        <button id="download-btn" class="btn btn-secondary" onclick="downloadScript()">Descargar Script</button>
     </section>
 
     <section id="instructions-section" class="section container mt-4 hidden">
@@ -94,9 +69,16 @@
     <script>
         function displayForm() {
             const platform = document.getElementById('platform').value;
-            if (platform) {
-                $('#form-section').removeClass('hidden');
-                $('#form-link').removeClass('hidden');
+            $('#form-section').removeClass('hidden');
+            if (platform === 'avs') {
+                $('#script-type').html(`
+                    <option value="powercli">PowerCLI (AVS)</option>
+                `);
+            } else if (platform === 'iaas') {
+                $('#script-type').html(`
+                    <option value="terraform">Terraform (IaaS)</option>
+                    <option value="arm">ARM (IaaS)</option>
+                `);
             }
         }
 
@@ -104,7 +86,14 @@
             $('#server-form tbody').append(`
                 <tr>
                     <td><input type="text" class="form-control" required></td>
-                    <td><input type="text" class="form-control os-field" required></td>
+                    <td>
+                        <select class="form-select os-field" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="windows">Windows Server</option>
+                            <option value="linux">Linux</option>
+                            <option value="ubuntu">Ubuntu</option>
+                        </select>
+                    </td>
                     <td><input type="number" class="form-control capacity-field" min="1" required></td>
                     <td><input type="number" class="form-control memory-field" min="1" required></td>
                     <td><input type="number" class="form-control cores-field" min="1"></td>
@@ -118,7 +107,6 @@
         }
 
         function generateScript() {
-            // Validación de campos obligatorios
             let valid = true;
             $('.os-field, .capacity-field, .memory-field').each(function() {
                 if (!$(this).val()) {
@@ -134,19 +122,47 @@
                 return;
             }
 
-            // Si pasa la validación, generar el script
             $('#output-section').removeClass('hidden');
-            $('#output-link').removeClass('hidden');
             $('#instructions-section').removeClass('hidden');
-            $('#instructions-link').removeClass('hidden');
+            $('#download-btn').removeClass('hidden');
 
-            // Aquí se generaría el script basado en la selección y datos del formulario
-            $('#script-output').text('Aquí se mostrará el script generado...');
+            const platform = $('#platform').val();
+            const scriptType = $('#script-type').val();
+            let scriptContent = '';
+
+            // Generar script basado en la selección
+            if (platform === 'avs' && scriptType === 'powercli') {
+                scriptContent = generatePowerCLIScript();
+            } else if (platform === 'iaas') {
+                if (scriptType === 'terraform') {
+                    scriptContent = generateTerraformScript();
+                } else if (scriptType === 'arm') {
+                    scriptContent = generateARMScript();
+                }
+            }
+
+            $('#script-output').text(scriptContent);
+        }
+
+        function generatePowerCLIScript() {
+            return 'PowerCLI script content...';
+        }
+
+        function generateTerraformScript() {
+            return 'Terraform script content...';
+        }
+
+        function generateARMScript() {
+            return 'ARM script content...';
         }
 
         function downloadScript() {
-            // Implementar la lógica de descarga del script generado
-            alert('Descargando script...');
+            const scriptContent = $('#script-output').text();
+            const blob = new Blob([scriptContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'script.txt';
+            link.click();
         }
     </script>
 </body>
